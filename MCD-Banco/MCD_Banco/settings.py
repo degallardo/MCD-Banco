@@ -25,7 +25,7 @@ SECRET_KEY = '81f0da9a-5afa-43c6-8448-70fa11b9e788'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['equipo2bancose.azurewebsites.net', 'equipo2banco.azurewebsites.net', 'localhost', '127.0.0.1']
 
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
@@ -101,7 +101,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-MX'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
