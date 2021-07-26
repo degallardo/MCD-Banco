@@ -3,6 +3,7 @@ Definition of models.
 """
 
 from django.db import models
+from datetime import date
 
 # Create your models here.
 class Pais(models.Model):
@@ -26,35 +27,20 @@ class Municipio(models.Model):
         return '%s - %s' % (self.nombre, self.idEstado)
 
 class Sucursal(models.Model):
-    nombre = models.CharField(max_length=50, default='Sucursal')
-    calle_y_numero = models.CharField(max_length=50, default='Calle y No')
-    colonia = models.CharField(max_length=50, default='Colonia')
-    pais = models.ForeignKey(Pais, on_delete=models.DO_NOTHING, default='País')
-    estado = models.ForeignKey(Estado, on_delete=models.DO_NOTHING, default='Estado')
-    municipio = models.ForeignKey(Municipio, on_delete=models.DO_NOTHING, default='Municipio')
-    region = models.CharField(max_length=50, default='Region')
+    nombre = models.CharField(max_length=50)
+    calle_y_numero = models.CharField(max_length=50)
+    colonia = models.CharField(max_length=50)
+    idPais = models.ForeignKey(Pais, on_delete=models.DO_NOTHING, default=None)
+    idEstado = models.ForeignKey(Estado, on_delete=models.DO_NOTHING, default=None)
+    idMunicipio = models.ForeignKey(Municipio, on_delete=models.DO_NOTHING, default=None)
+    region = models.CharField(max_length=50)
 
     def __str__(self):
         return '%s' % (self.nombre)
 
-class TipoTarjeta(models.Model):
-    nombre = models.CharField(max_length=50, default='Tipo de tarjeta')
-    costo = models.IntegerField()
-
-    def __str__(self):
-        return '%s - Costo: %s' % (self.nombre, self.costo)
-
-class SolicitudCredito(models.Model):
-    nombre = models.CharField(max_length=50, default='Tipo de crédito')
-    costo = models.IntegerField()
-    tasa_interes = models.IntegerField()
-
-    def __str__(self):
-        return '%s - %s' % (self.nombre, self.costo)
-
 class Promotor(models.Model):
     nombre = models.CharField(max_length=100)
-    apellidos = models.CharField(max_length=100, default='Apellidos')
+    apellidos = models.CharField(max_length=100)
     status = models.CharField(max_length=10)
     fecha = models.DateField(auto_now=True)
     objetivo = models.IntegerField()
@@ -63,34 +49,98 @@ class Promotor(models.Model):
     def __str__(self):
         return '%s %s' % (self.apellidos, self.nombre)
 
+class TipoTarjeta(models.Model):
+    nombre = models.CharField(max_length=50)
+    tasa_interes = models.DecimalField(max_digits=2, decimal_places=2, default=None)
+
+    def __str__(self):
+        return '%s - Costo: %s' % (self.nombre, self.costo)
+
+class TipoCredito(models.Model):
+    nombre = models.CharField(max_length=50)
+    tasa_interes = models.DecimalField(max_digits=2, decimal_places=2)
+
+    def __str__(self):
+        return '%s - Tasa de interes: %s' % (self.nombre, self.tasa_interes)
+
+class StatusSolicitudCredito(models.Model):
+    nombre = models.CharField(max_length=20)
+
+    def __str__(self):
+        return '%s' % (self.nombre)
+
+class Cliente(models.Model):
+    fecha_alta = models.DateField(default=date.today)
+    nombre = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    calle_y_numero = models.CharField(max_length=50)
+    colonia = models.CharField(max_length=50)
+    idPais = models.ForeignKey(Pais, on_delete=models.DO_NOTHING)
+    idEstado = models.ForeignKey(Estado, on_delete=models.DO_NOTHING)
+    idMunicipio = models.ForeignKey(Municipio, on_delete=models.DO_NOTHING)
+    fecha_nacimiento = models.DateField(null=True)
+    cantidad_hijos = models.IntegerField()
+    rfc = models.CharField(max_length=13)
+    idPromotor = models.ForeignKey(Promotor, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return 'Nombre: %s Apellidos: %s' % (self.nombre)
+
+# Cliente debe ir antes de SolicitudCredito.
+
+class SolicitudCredito(models.Model):
+    monto_solicitado = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
+    fecha_solicitud = models.DateField(default=date.today)
+    idTipoCredito = models.ForeignKey(TipoCredito, on_delete=models.DO_NOTHING, default=None)
+    idStatusSolicitudCredito = models.ForeignKey(StatusSolicitudCredito, on_delete=models.DO_NOTHING, default=None)
+
+    def __str__(self):
+        return '%s - %s' % (self.nombre, self.tipo_credito)
+
+class StatusCredito(models.Model):
+    nombre = models.CharField(max_length=20)
+
+    def __str__(self):
+        return '%s' % (self.nombre)
+
+class Credito(models.Model):
+    fecha_alta = models.DateField(default=date.today)
+    idCliente = models.ForeignKey(Cliente, on_delete=models.DO_NOTHING)
+    idTipoCredito = models.ForeignKey(TipoCredito, on_delete=models.DO_NOTHING)
+    monto_otorgado = models.DecimalField(max_digits=7, decimal_places=2)
+    idStatusCredito = models.ForeignKey(StatusCredito, on_delete=models.DO_NOTHING)
+    idSolicitud = models.ForeignKey(SolicitudCredito, on_delete=models.DO_NOTHING)
+    monto_pago = models.DecimalField(max_digits=7, decimal_places=2)
+    dia_pago = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return 'Fecha alta: %s Cliente: %s Tipo de credito: %s Monto otorgado: %s, Estatus: %s, Dia de pago: %s' % (self.fecha_alta, self.idCliente, self.idTipoCredito, self.monto_otorgado, self.status, self.dia_pago)
+
+class Pagos(models.Model):
+    idCredito = models.ForeignKey(Credito, on_delete=models.DO_NOTHING)
+    fecha_pago = models.DateField(default=date.today)
+    monto_pagado = models.DecimalField(max_digits=7, decimal_places=2)
+
+    def __str__(self):
+        return 'Credito: %s Fecha de pago: %s Monto pagado: %s' % (self.idCredito, self.fecha_pago, self.monto_pagado)
+
 class Comision(models.Model):
-    promotor = models.ForeignKey(Promotor, on_delete=models.DO_NOTHING)
-    fecha = models.DateField()
-    monto_colocado = models.IntegerField()
-    comision_ganada = models.IntegerField()
+    idPromotor = models.ForeignKey(Promotor, on_delete=models.DO_NOTHING)
+    fecha = models.DateField(default=date.today)
+    monto_colocado = models.DecimalField(max_digits=7, decimal_places=2)
+    comision_ganada = models.DecimalField(max_digits=7, decimal_places=2)
 
-#class Cliente(models.Model):
-#    nombre = models.CharField(max_length=100)
-#    apellido_paterno = models.CharField(max_length=100, default='Apellido Paterno')
-#    apellido_materno = models.CharField(max_length=100, default='Apellido Materno')
-#    fecha_nacimiento = models.DateField()
-#    calle_y_numero = models.CharField(max_length=50, default='Calle y No')
-#    colonia = models.CharField(max_length=50, default='Colonia')
-#    pais = models.ForeignKey(Pais, default='México', on_delete=models.DO_NOTHING)
-#    estado = models.ForeignKey(Estado, on_delete=models.DO_NOTHING)
-#    municipio = models.ForeignKey(Municipio, on_delete=models.DO_NOTHING)
-#    fecha_alta = models.DateField(auto_now_add=True, default='Fecha de alta')
-#    rfc = models.CharField(max_length=13, default='RFC')
+    def __str__(self):
+        return 'Promotor: %s Fecha: %s, Monto Colocado: %s Comision ganada: %s' % (self.promotor, self.fecha, self.monto_colocado, self.comision_ganada)
 
-#    def __str__(self):
-#        return '%s %s %s - %s' % (self.apellido_paterno, self.apellido_materno, self.nombre, self.rfc)
+class AyudaCovid(models.Model):
+    fecha_solicitud = models.DateField(default=date.today)
+    idCliente = models.ForeignKey(Cliente, on_delete=models.DO_NOTHING)
+    motivo = models.TextField()
+    fecha_aprobacion = models.DateField(null=True)
+    apoyo_aprobado = models.PositiveIntegerField() # En meses para pagar el crédito
 
-#class Cuenta(models.Model):
-#    numero_cuenta = models.CharField(max_length=8)
-#    idCliente = models.ForeignKey(Cliente, on_delete=models.DO_NOTHING)
-#    fecha = models.DateField(auto_now=True,)
-#    saldo = models.DecimalField(max_digits=12, decimal_places=2)
+    def __str__(self):
+        return 'Fecha de solicitud: %s Cliente: %s, Motivo: %s Fecha aprobacion: %s apoyo aprobado (en meses)' % (self.fecha_solicitud, self.idCliente, self.motivo, self.fecha_aprobacion, self.apoyo_aprobado)
 
-#    def __str__(self):
-#        return '%s - %s  %s  %s' % (self.numero_cuenta, self.idCliente, self.fecha, self.saldo)
-
+# ToDo: Calificaciones_Internas, Calificaciones_Buro
