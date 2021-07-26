@@ -76,6 +76,8 @@
     <Folder Include="MCD_Banco\static\app\content\" />
     <Folder Include="MCD_Banco\static\app\fonts\" />
     <Folder Include="MCD_Banco\static\app\scripts\" />
+    <Folder Include="Properties\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mcdbancodb.sqlite3" />
@@ -220,6 +222,7 @@
     <Content Include="MCD_Banco\static\app\scripts\respond.js" />
     <Content Include="MCD_Banco\static\app\scripts\respond.min.js" />
     <None Include="MCD_Banco\static\app\scripts\_references.js" />
+    <None Include="Properties\PublishProfiles\MCD-Banco - Web Deploy.pubxml" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\static\app\content\bootstrap.css" />
