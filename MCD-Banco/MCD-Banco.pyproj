@@ -4,7 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>MCD-Banco</Name>
     <RootNamespace>MCD-Banco</RootNamespace>
-    <InterpreterId>MSBuild|env 3.7 32-bit|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|env_38_32|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -223,6 +223,7 @@
     <Content Include="MCD_Banco\static\app\scripts\respond.min.js" />
     <None Include="MCD_Banco\static\app\scripts\_references.js" />
     <None Include="Properties\PublishProfiles\MCD-Banco - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\FTPProfile.pubxml" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\static\app\content\bootstrap.css" />
@@ -260,10 +261,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="env 3.7 32-bit\">
-      <Id>env 3.7 32-bit</Id>
-      <Version>3.7</Version>
-      <Description>env 3.7 32-bit (Python 3.7 (32-bit))</Description>
+    <Interpreter Include="env_38_32\">
+      <Id>env_38_32</Id>
+      <Version>3.8</Version>
+      <Description>env_38_32 (Python 3.8 (32-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
