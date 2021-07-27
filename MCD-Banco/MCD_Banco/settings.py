@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['*', 'mcd-banco.azurewebsites.net','mcd-banco-t1.azurewebsites.
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic",
     'app',
     # Add your apps here to enable them
     'django.contrib.admin',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 # https://docs.djangoproject.com/en/2.1/topics/http/middleware/
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -111,4 +113,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
+STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static'])).replace('\\', '/')
+STATICFILES_DIRS = []
+STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')

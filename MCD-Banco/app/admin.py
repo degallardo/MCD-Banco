@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pais, Estado, Municipio, Sucursal, TipoTarjeta, SolicitudCredito, Promotor, Comision, TipoCredito, StatusSolicitudCredito, Cliente, StatusCredito, Credito, Pagos, AyudaCovid
+from .models import Pais, Estado, Municipio, Sucursal, TipoTarjeta, SolicitudCredito, Promotor, Comision, TipoCredito, StatusSolicitudCredito, Cliente, StatusCredito, Credito, Pagos, AyudaCovid, StatusPromotor
 
 admin.site.register(Pais)
 admin.site.register(Estado)
@@ -16,7 +16,7 @@ admin.site.register(StatusCredito)
 admin.site.register(Credito)
 admin.site.register(Pagos)
 admin.site.register(AyudaCovid)
-#admin.site.register()
+admin.site.register(StatusPromotor)
 #admin.site.register()
 #admin.site.register()
 #admin.site.register()
