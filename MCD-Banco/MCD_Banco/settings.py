@@ -30,7 +30,8 @@ ALLOWED_HOSTS = ['*', 'mcd-banco.azurewebsites.net','mcd-banco-t1.azurewebsites.
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
 INSTALLED_APPS = [
-    "whitenoise.runserver_nostatic",
+    'whitenoise.runserver_nostatic',
+    'polls.apps.pollsConfig',
     'app',
     # Add your apps here to enable them
     'django.contrib.admin',
